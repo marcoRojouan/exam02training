@@ -1,42 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_hex.c                                        :+:      :+:    :+:   */
+/*   last_word.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrojouan <mrojouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/10 12:24:00 by mrojouan          #+#    #+#             */
-/*   Updated: 2025/12/10 12:37:08 by mrojouan         ###   ########.fr       */
+/*   Created: 2025/12/09 15:04:20 by mrojouan          #+#    #+#             */
+/*   Updated: 2025/12/09 16:10:57 by mrojouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-int ft_atoi(char *str)
+int ft_strlen(char *str)
 {
-	int nbr;
 	int i = 0;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		nbr = nbr * 10 + (str[i] - '0');
+
+	while (str[i])
 		i++;
-	}
-	return (nbr);
+	return (i);
 }
-
-void put_hex(int nbr)
+int is_ws(char c)
 {
-	char *hex_base;
-
-	hex_base = "0123456789abcdef";
-	if (nbr >= 16)
-	{
-		put_hex(nbr / 16);
-	}
-	nbr = hex_base[nbr % 16];
-	write(1, &nbr, 1);
+	if ((c > 9 && c < 13) || c == ' ')
+		return (1);
+	return (0);
 }
+void last_word(char *str)
+{
+	int len = ft_strlen(str);
 
+	while (len >= 0 && is_ws(str[len]))
+		len--;
+	while (len >= 0 && !is_ws(str[len]))
+		len--;
+	len++;
+	while (str[len] && !is_ws(str[len]))
+	{
+		write(1, &str[len], 1);
+		len++;
+	}
+}
 int main(int ac, char **av)
 {
 	if (ac != 2)
@@ -44,6 +48,6 @@ int main(int ac, char **av)
 		write(1, "\n", 1);
 		return (0);
 	}
-	put_hex(ft_atoi(av[1]));
+	last_word(av[1]);
 	write(1, "\n", 1);
 }
